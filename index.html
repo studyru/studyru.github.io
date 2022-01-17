@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Russian Study Asst</title>
+<meta charset="UTF-8">
+<style>
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.drop_zone {
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.25);
+  display: inline-block;
+  border-radius: 10px;
+  margin: 20px;
+  margin-right: 0;
+  padding: 15px;
+  font-size:24px;
+  line-height: 12px;
+  font-family: 'Courier New', Courier, monospace;
+  transition: 0.25s;
+}
+.drop_zone:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.top_row {
+  display: inline-block;
+  border-radius: 10px;
+  background-color: rgb(235,235,235);
+  margin: 20px;
+  margin-right: 0;
+  padding: 15px;
+  font-size:24px;
+  line-height: 12px;
+  font-family: 'Courier New', Courier, monospace;
+  transition: 0.25s;
+}
+.top_row:hover {
+  cursor: pointer;
+  background-color: rgb(200, 200, 200);
+}
+
+#prompt_button {
+  display: inline-block;
+  border-radius: 10px;
+  /* border: 3px solid white; */
+  margin: 20px;
+  margin-right: 0px;
+  margin-top: 5px;
+  padding: 15px;
+  /* font-size: 18px; */
+  font-family: 'Courier New', Courier, monospace;
+  transition: 0.25s;
+  color: white;
+  background-color: crimson;
+}
+#prompt_button:hover {
+  cursor: pointer;
+  transform: scale(1.15);
+}
+h1 {
+  display: inline-block;
+  text-align: center;
+  font-size: 96px;
+}
+h2 {
+  display: inline-block;
+  text-align: center;
+  font-size: 64px;
+}
+
+#settings_container {
+  text-align: left;
+  width: 90%;
+  padding-left: 5%;
+  padding-right: 5%;
+  display: none;
+}
+#practice_container {
+  /* display: none; */
+  text-align: center;
+  width: 100%;
+}
+.prompt_block {
+  background-color: dodgerblue;
+  color: white;
+  border-radius: 20px;
+  padding: 40px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.result {
+  transition: 0.25s all;
+  margin: 20px;
+  display: inline-block;
+}
+.result:hover {
+  cursor: pointer;
+  transform: scale(1.15);
+}
+
+input {
+  height: 20px;
+  border-radius: 10px;
+  border: 3px solid rgb(215, 215, 215);
+  padding: 10px;
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+  outline: none;
+}
+textarea {
+  margin-top: 10px;
+  height: 20px;
+  border-radius: 10px;
+  border: 3px solid rgb(215, 215, 215);
+  padding: 10px;
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+  outline: none;
+}
+select {
+  height: 40px;
+  margin-left: 10px;
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.addbutton {
+  background-color:dodgerblue;
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
+  font-size: 18px;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+  /* margin-top: 5px; */
+  transition: 0.25s all;
+}
+.addbutton:hover {
+  cursor: pointer;
+  transform: scale(1.15);
+}
+.deletebutton {
+  background-color:crimson;
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
+  font-size: 18px;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  transition: 0.25s all;
+}
+.deletebutton:hover {
+  cursor: pointer;
+  transform: scale(1.15);
+}
+#editableitems {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+}
+.translation {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 24px;
+  background-color: rgb(215, 215, 215);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+}
+#actions {
+  width: 100%;
+  text-align: left;
+}
+
+
+</style>
+</head>
+<body>
+
+  <form style="display: none" action="/action_page.php">
+    <input type="file" id="fileinput" name="filename" multiple>
+  </form>
+
+  <div id="dz" class="drop_zone" ondrop="dropHandler(event)" onclick="document.getElementById('fileinput').click();" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)"><span style="font-size:36px">⇲</span> Files</div>
+  <!-- <div class="top_row" onclick="makevisible('settings')"><span style="font-size:36px">⚙</span> Settings</div> -->
+  <!-- <div class="top_row" onclick="makevisible('shop')"><span style="font-size:28px; font-weight: 900;">$</span> Shop (<span id="pointsticker"></span>)</div> -->
+  <!-- <div class="top_row" onclick="makevisible('game')"><span style="font-size:28px; font-weight: 900;">♠</span> Game</div> -->
+  <!-- <div class="top_row" onclick="makevisible('practice')"><span style="font-size:36px; font-weight: 900;">♻</span> Practice</div> -->
+  <br>
+  <div id="practice_container">
+    <div id="actions"></div>
+    <br>
+    <h1 id="prompt_words"></h1>
+  </div>
+  <div id="settings_container">
+    <input type="text" placeholder="Add vocab category" id="vocabcatinput"><div class="addbutton" onclick="addvocabcat()">Add</div><br>
+    <textarea placeholder="Add vocab words" id="vocabwordsinput"></textarea><select id="newvocabwordcats"></select><div class="addbutton" onclick="addvocabword()">Add</div><br>
+    <br><span style="font-family: 'Courier New', Courier, monospace; font-size: 18px;">Edit:</span><select id="edititems" onchange="loadedititems()"><option value="vocabcats">vocabcats</option></select>
+    <br><div id="editableitems"></div>
+  </div>
+
+<script>
+
+  document.getElementById("fileinput").addEventListener("change", function(e) {
+    console.log("value changed.......");
+    var files = e.target.files;
+    console.log(files);
+    for (var f=0; f<files.length; f++) {
+      handlefile(files[f]);
+    }
+  });
+
+  function makevisible(container) {
+    console.log("make visible");
+    container = container + "_container";
+    // console.log(container);
+    var containers = ["settings_container", "practice_container", "game_container", "imgadder_container"];
+    for (var c=0; c<containers.length; c++) {
+      if (containers[c] == container) {
+        console.log("in one more");
+        document.getElementById(containers[c]).style.display = "inline-block";
+      } else {
+        document.getElementById(containers[c]).style.display = "none";
+      }
+    }
+  }
+
+  // DATA
+
+  var datastore = {
+    "adjectives": {},
+    "conjugations": {},
+    "declensions": {},
+    "expressions_words": {},
+    "nouns": {},
+    "sentences_words": {},
+    "sentences": {},
+    "translations": {},
+    "verbs": {},
+    "words_forms": {},
+    "words_rels": {},
+    "words": {}
+  }
+  fields = {
+    "adjectives.csv": ["word_id", "incomparable", "comparative", "superlative", "short_m", "short_f", "short_n", "short_pl", "decl_m_id", "decl_f_id", "decl_n_id", "decl_pl_id"],
+    "conjugations.csv": ["id", "word_id", "sg1", "sg2", "sg3", "pl1", "pl2", "pl3"],
+    "declensions.csv": ["id", "word_id", "nom", "gen", "dat", "acc", "inst", "prep"],
+    "expressions_words.csv": ["id", "expression_id", "referenced_word_id", "start", "length"],
+    "nouns.csv": ["word_id", "gender", "partner", "animate", "indeclinable", "sg_only", "pl_only", "decl_sg_id", "decl_pl_id"],
+    "sentences_words.csv": ["id", "sentence_id", "word_id", "start", "length"],
+    "sentences.csv": ["id", "ru", "lang", "tl", "tatoeba_key", "source_url", "disabled", "locked", "level", "audio_url", "audio_attribution_url", "audio_attribution_name"],
+    "translations.csv": ["id", "lang", "word_id", "position", "tl", "example_ru", "example_tl", "info"],
+    "verbs.csv": ["word_id", "aspect", "partner", "imperative_sg", "imperative_pl", "past_m", "past_f", "past_n", "past_pl", "presfut_conj_id", "participle_active_present_id", "participle_active_past_id", "participle_passive_present_id", "participle_passive_past_id"],
+    "words_forms.csv": ["id", "word_id", "form_type", "position", "accented"],
+    "words_rels.csv": ["id", "word_id", "rel_word_id", "relation"],
+    "words.csv": ["id", "position", "bare", "accented", "derived_from_word_id", "rank", "disabled", "usage_en", "usage_de", "number_value", "type", "level", "created_at"],
+  }
+
+  var topnouns = [];
+  var topadjs = [];
+  var topverbs = [];
+  var verbsall = {};
+  var alltranslations = [];
+
+  // prepositions via: http://www.study-languages-online.com/grammar/tables/prepositions-by-case
+  var cases = ["gen", "gen", "gen", "gen", "dat", "acc", "acc", "instr", "prep"];
+  var casenums = {"gen": 0, "dat": 1, "acc": 2, "instr": 3, "prep": 4};
+  var prepositions = {
+  "gen": ["без", "ввиду", "вдоль", "вместо", "вне", "внутри", "внутрь", "возле", "впереди", "вследствие", "вокруг", "для", "до", "из", "из-за", "из-под", "кроме", "между (gen. rare)", "мимо", "напротив", "насчет", "около", "от (ото)", "относительно", "помимо", "после", "посреди", "посредством", "подле", "позади", "против", "путём", "ради", "с (со)", "сверх", "свыше", "среди", "у"],
+  "dat": ["благодаря", "вопреки", "к (ко)", "по"],
+  "acc": ["в (во) (movement)", "за (movement)", "на (movement)", "о", "по", "под (movement)", "про", "c", "сквозь", "через"],
+  "instr": ["за", "между", "над (надо)", "перед (передо)", "под (подо)", "с (со)"],
+  "prep": ["в (во)", "на", "о (об)", "по", "при"],
+  }
+  var preposition_translations = {
+"без": "'without'", "ввиду": "'in view of'", "вдоль": "'along'", "вместо": "'instead of'", "вне": "'outside'", "внутри": "'inside' to indicate the position", "внутрь": "'inside' to indicate movement", "возле": "'near'", "впереди": "'in front of'", "вследствие": "'because of'", "вокруг": "'round'", "для": "'for'", "до": "'up to, until, before'", "из": "'out of'", "из-за": "'out from behind, because of'", "из-под": "'out from under'", "кроме": "'besides, except'", "между": "'between' used with the genitive only in a few phrases: читать между строк, между двух огней", "мимо": "'past'", "напротив": "'opposite'", "насчет": "'about, as regards'", "около": "'at the side of, near, around'", "от (ото)": "'from, away from'", "относительно": "'concerning'", "помимо": "'besides, apart from'", "после": "'after'", "посреди": "'in the middle of'", "посредством": "'by means of'", "подле": "'alongside of'", "позади": "'behind'", "против": "'against'", "путём": "'by means of'", "ради": "'for the sake of'", "с (со)": "'from, off, since'", "сверх": "'on top of, over and above'", "свыше": "'over, more than'", "среди": "'among'", "у": "'near, at, at the house of (possession)'", "благодаря": "'thanks to'", "вопреки": "'despite'", "к (ко)": "'towards, up to'", "по": "'along, round, by means (communication), on (days)'", "в (во)": "'into, to, in' when movement is involved", "за": "'behind or beyond' when movement into a position is involved", "на": "'on to, on' when movement is involved", "о": "'against' in the sense of in contact with", "по": "'up to' a certain point in space or time", "под": "'under' when movement into a position is involved", "про": "'about, concerning'", "c": "'approximately, about' with nouns denoting measurement", "сквозь": "'through'", "через": "'across, through, over'", "за": "'behind, beyond'", "между": "'between'", "над (надо)": "'over, above'", "перед (передо)": "'in front of, before'", "под (подо)": "'under, below'", "с (со)": "'with'", "в (во)": "'in, at' to define location where sth is situated or hapenning, in expressions of time", "на": "'on, in, at' to define location", "о (об)": "'about, concerning'", "по": "'after, following'", "при": "'at the time of, in the presence of, while'"
+  }
+
+// ++++++++++++++++++++++++++ SETTINGS
+
+  initializestorage();
+  function initializestorage() {
+    localStorage.setItem("points", "0");
+  }
+
+  // loadsettings();
+  // loadedititems();
+
+  function loadsettings() {
+
+    var vocabcats = localStorage.getItem("vocabcats").split(";");
+    // vocabcats = ["category 1", "category 2", "category 3", "category 4"];
+
+    document.getElementById("newvocabwordcats").innerHTML = "";
+    document.getElementById("edititems").innerHTML = '<option value="vocabcats">vocabcats</option>';
+    for (var i=0; i<vocabcats.length; i++) {
+      if (vocabcats[i] != "") {
+        document.getElementById("newvocabwordcats").innerHTML += "<option value='" + vocabcats[i] + "'>" + vocabcats[i] + "</option>";
+        document.getElementById("edititems").innerHTML += "<option value='" + vocabcats[i] + "'>" + vocabcats[i] + "</option>";
+      }
+    }
+
+  }
+
+  function loadedititems() {
+    var editableitems = localStorage.getItem(document.getElementById("edititems").value);
+    editableitems = editableitems.split(";");
+    document.getElementById("editableitems").innerHTML = "";
+    for (var i=0; i<editableitems.length; i++) {
+      if (editableitems[i] != "") {
+        document.getElementById("editableitems").innerHTML += "<div class=\"deletebutton\" onclick=\"deleteitem('" + editableitems[i] + "')\">Delete</div>" + editableitems[i] + "<br>";
+      }
+    }
+  }
+
+  // function deleteitem(itemstr) {
+  //   console.log("in delete item");
+  //   console.log(itemstr);
+  //   console.log(document.getElementById("edititems").value);
+  //   var storagekey = document.getElementById("edititems").value;
+  //   localStorage.setItem(storagekey, localStorage.getItem(storagekey).replace(itemstr + ";", ""))
+  //   localStorage.removeItem(itemstr);
+  //   loadedititems();
+  // }
+
+  // function addvocabcat() {
+  //   localStorage.setItem("vocabcats", localStorage.getItem("vocabcats") + document.getElementById("vocabcatinput").value + ";");
+  //   localStorage.setItem(document.getElementById("vocabcatinput").value, "");
+  //   loadsettings();
+  // }
+  //
+  // function addvocabword() {
+  //   localStorage.setItem(document.getElementById("newvocabwordcats").value, localStorage.getItem(document.getElementById("newvocabwordcats").value) + document.getElementById("vocabwordsinput").value.replaceAll("\n", ";") + ";");
+  //   console.log(localStorage.getItem(document.getElementById("newvocabwordcats").value));
+  // }
+
+  function recordresult(points, typereset) {
+
+    // localStorage.setItem("points", parseInt(localStorage.getItem("points")) + points);
+    // document.getElementById("pointsticker").innerHTML = (parseInt(localStorage.getItem("points")) + points).toString();
+
+    generate(typereset);
+
+  }
+
+  // ++++++++++++++++++++++++++ GENERATE GRAMMAR CARDS
+
+  function displayprompt(display, prompt, answer, ms, typereset, wordids) {
+
+    var dest = "prompt_words";
+
+    var transwords;
+    if (wordids.length == 1) {
+      transwords = "'" + wordids[0] + "'";
+    } else {
+      transwords = wordids[0];
+      wordids.shift();
+      for (var i=0; i<wordids.length; i++) {
+        transwords += ", '" + wordids[i] + "'";
+      }
+    }
+
+    document.getElementById(dest).innerHTML = "<h1>" + display + "</h1>";
+    setTimeout(function(){
+      if (typereset == "verbal") {
+        document.getElementById(dest).innerHTML = "<h2 class='prompt_block'>" + prompt + "</h2>";
+      } else {
+        document.getElementById(dest).innerHTML = "<h1 class='prompt_block'>" + prompt + "</h1>";
+      }
+      setTimeout(function(){
+        document.getElementById(dest).innerHTML = answer;
+        setTimeout(function(){
+          document.getElementById(dest).innerHTML += "<br><div class=\"result\" onclick=\"recordresult(-2, '" + typereset + "')\">😞</div><div class=\"result\" onclick=\"recordresult(1, '" + typereset + "')\">😀</div><div class=\"result\" onclick=\"translate([" + transwords + "])\">🔀</div>";
+        }, 500);
+      }, ms);
+    }, ms);
+  }
+
+  function generate(type) {
+
+    switch (type) {
+
+      case "declension":
+
+        var noun = randitem(topnouns);
+        var adj = randitem(topadjs);
+        var sgpl = randitem(["sg", "pl"]);
+        var declnoun = datastore["nouns"][noun["id"]]["decl_" + sgpl + "_id"];
+        declnoun = datastore["declensions"][declnoun];
+        var decladj;
+        if (sgpl == "pl") {
+          decladj = datastore["adjectives"][adj["id"]]["decl_pl_id"];
+          decladj = datastore["declensions"][decladj];
+        } else {
+          decladj = datastore["adjectives"][adj["id"]]["decl_" + datastore["nouns"][noun["id"]]["gender"] + "_id"];
+          decladj = datastore["declensions"][decladj];
+        }
+
+        var selectedcase = randitem(["gen", "dat", "acc", "inst", "prep"]);
+        var prep = randitem(prepositions[selectedcase]);
+
+        if (decladj == undefined || declnoun == undefined || Object.keys(decladj).length == 0 || Object.keys(declnoun).length == 0) {
+          generate("declension");
+        } else {
+          displayprompt(decladj["nom"] + " " + declnoun["nom"], prep, decladj[selectedcase] + " " + declnoun[selectedcase], 5000, type, [noun["id"], adj["id"]]);
+        }
+
+        return;
+      case "conjugation":
+
+        console.log("in generate conj");
+
+        var tmpverblist = ["дать", "давать", "вести", "нести"];
+        // var tmpverblist = ["продолжать"];
+        var selectednum = randnum(0, tmpverblist.length - 1);
+
+        console.log(tmpverblist[selectednum]);
+        console.log(verbsall);
+        console.log(Object.keys(verbsall).length);
+        console.log(Object.keys(verbsall).includes(tmpverblist[selectednum]));
+        console.log(Object.keys(verbsall));
+        console.log(verbsall[tmpverblist[selectednum]]);
+
+        var verbword = verbsall[tmpverblist[selectednum]];
+        var verb = datastore["verbs"][verbword["id"]];
+        var conjs = datastore["conjugations"][verb["presfut_conj_id"]];
+
+        var subjs = ["я", "ты", "3rdsingular", "мы", "вы", "они"];
+        var subjcodes = ["sg1", "sg2", "sg3", "pl1", "pl2", "pl3"];
+        subjnum = randnum(0, 5);
+        var subj = subjs[subjnum];
+        if (subjnum == 2) {
+          subj = randitem(["он", "она"]);
+        }
+
+        var conj = conjs[subjcodes[subjnum]];
+
+        displayprompt(verbword["accented"], subj, subj + " " + conj, 3000, type, [verbword["id"]]);
+
+        return;
+      case "aspect":
+
+        var verbword = randitem(topverbs);
+        var verb = datastore["verbs"][verbword["id"]];
+        if (verb["partner"] == "" || verb["partner"] == "-") {
+          generate("aspect");
+        } else {
+          var aspectchange;
+          if (verb["aspect"] == "perfective") {
+            aspectchange = "perf → imp";
+          } else {
+            aspectchange = "imp → perf";
+          }
+          displayprompt(verbword["accented"], aspectchange, verb["partner"].replaceAll('"', ''), 3000, type, [verbword["id"]]);
+
+        }
+
+        return;
+      case "verbal":
+
+        var verbword = randitem(topverbs);
+        var verb = datastore["verbs"][verbword["id"]];
+
+        // var verbaltype = randitem(["participle_active_present", "participle_active_past", "participle_passive_present", "participle_passive_past", "gerund_present", "gerund_past"]);
+        var verbaltype = randitem(["participle_active_present", "participle_active_past", "participle_passive_present", "participle_passive_past"]);
+        
+        var verbalid;
+        if (verbaltype.includes("gerund")) {
+          //
+        } else {
+          verbalid = verb[verbaltype + "_id"];
+        }
+
+        if (verbalid == "") {
+          generate(type);
+        } else {
+          var verbal = datastore["words"][verbalid]["accented"];
+          displayprompt(verbword["accented"], verbaltype.replaceAll("_", " "), verbal, 3000, type, [verbword["id"]]);
+        }
+
+        return;
+      default:
+        return;
+
+    }
+  }
+
+  // ++++++++++++++++++++++++++ IMPORT FILES
+
+    function dropHandler(ev) {
+      ev.preventDefault();
+      for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+          if (ev.dataTransfer.items[i].kind === 'file') {
+            var file = ev.dataTransfer.files[i];
+            handlefile(file);
+          }
+        }
+    }
+
+    function handlefile(file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        universal_parse(file.name, event.target.result);
+      }
+      reader.readAsText(file);
+    };
+
+    function dragOverHandler(ev) {
+      ev.preventDefault();
+    }
+
+    function dragLeaveHandler(ev) {
+      ev.preventDefault();
+    }
+
+    // ++++++++++++++++++++++++++ PARSE FILES
+
+    function universal_parse(filename, str) {
+      str = addStress(str);
+      str = str.split("\n");
+      for (var x=0; x<str.length; x++) {
+        arr = str[x].split(",");
+        if (arr.length == fields[filename].length) {
+          var dataadd = {};
+          for (var i=0; i<arr.length; i++) {
+            dataadd[fields[filename][i]] = arr[i];
+          }
+        } else  {
+          for (var y=0; y<arr.length; y++) {
+            if (arr[y].substring(0, 1) == '"') {
+              // console.log("in substring...");
+              arr[y] = arr[y].substring(1);
+            }
+            if (arr[y].slice(-1) == '"') {
+              arr.splice(y, 1);
+              y += 1;
+              var dataadd = {};
+              if (arr.length == fields[filename].length) {
+                for (var i=0; i<arr.length; i++) {
+                  dataadd[fields[filename][i]] = arr[i];
+                }
+              }
+            }
+          }
+        }
+        datastore[filename.split(".")[0]][dataadd[fields[filename][0]]] = dataadd;
+      }
+      switch (filename.split(".")[0]) {
+        case "verbs":
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('conjugation')\">Conjugation</div>";
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('aspect')\">Aspect</div>";
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('verbal')\">Verbal</div>";
+          return;
+        case "declensions":
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('declension')\">Declension</div>";
+          return;
+        case "words":
+          for (var x=0; x<str.length; x++) {
+            arr = str[x].split(",");
+            if (arr.length == fields[filename].length) {
+              if (arr[5] != "" && arr[5] < 10000 && arr[10] == "noun") {
+                var dataadd = {};
+                for (var i=0; i<arr.length; i++) {
+                  dataadd[fields[filename][i]] = arr[i];
+                }
+                topnouns.push(dataadd);
+              } else if (arr[5] != "" && arr[5] < 10000 && arr[10] == "adjective") {
+                var dataadd = {};
+                for (var i=0; i<arr.length; i++) {
+                  dataadd[fields[filename][i]] = arr[i];
+                }
+                topadjs.push(dataadd);
+              } else if (arr[5] != "" && arr[5] < 10000 && arr[10] == "verb") {
+                var dataadd = {};
+                for (var i=0; i<arr.length; i++) {
+                  dataadd[fields[filename][i]] = arr[i];
+                }
+                topverbs.push(dataadd);
+              }
+              if (arr[10] == "verb") {
+                var dataadd = {};
+                for (var i=0; i<arr.length; i++) {
+                  dataadd[fields[filename][i]] = arr[i];
+                }
+                verbsall[dataadd["bare"]] = dataadd;
+              }
+            }
+          }
+          return;
+        case "translations":
+          for (var t=0; t<str.length; t++) {
+            if (str[t].split(",")[1] == "en") {
+              arr = str[t].split(",");
+              var dataadd = {};
+              for (var i=0; i<arr.length; i++) {
+                dataadd[fields[filename][i]] = arr[i];
+              }
+              alltranslations.push(dataadd);
+            }
+          }
+          console.log(alltranslations.length);
+          return;
+        default:
+          return;
+      }
+    }
+
+    function translate(wordids) {
+      // console.log("IN TRANSLATE +++");
+      // console.log(wordid);
+      // console.log(alltranslations);
+      for (var x=0; x<wordids.length; x++) {
+        var wordid = wordids[x];
+        document.getElementById("prompt_words").innerHTML += "<br>";
+        for (var i=0; i<alltranslations.length; i++) {
+          if (alltranslations[i]["word_id"] == wordid) {
+            console.log("YES +++");
+            document.getElementById("prompt_words").innerHTML = "<div class='translation'>" + alltranslations[i]["tl"].replaceAll('"', '') + "</div>" + document.getElementById("prompt_words").innerHTML;
+          }
+        }
+      }
+    }
+
+    function addStress(str) {
+      str = str.replaceAll("а'", "а́");
+      str = str.replaceAll("е'", "е́");
+      str = str.replaceAll("и'", "и́");
+      str = str.replaceAll("о'", "о́");
+      str = str.replaceAll("у'", "у́");
+      str = str.replaceAll("ы'", "ы́");
+      str = str.replaceAll("э'", "э́");
+      str = str.replaceAll("ю'", "ю́");
+      str = str.replaceAll("я'", "я́");
+      str = str.replaceAll("А'", "А́");
+      str = str.replaceAll("Е'", "Е́");
+      str = str.replaceAll("И'", "И́");
+      str = str.replaceAll("О'", "О́");
+      str = str.replaceAll("У'", "У́");
+      str = str.replaceAll("Ы'", "Ы́");
+      str = str.replaceAll("Э'", "Э́");
+      str = str.replaceAll("Ю'", "Ю́");
+      str = str.replaceAll("Я'", "Я́");
+      return str;
+    }
+
+// ++++++++++++++++++++++++++ HELPER FUNCTIONS
+
+function randitem(list) {
+  return list[randnum(1, list.length) - 1];
+}
+
+function randnum(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+</script>
+
+</body>
+</html>
