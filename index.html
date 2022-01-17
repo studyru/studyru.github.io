@@ -189,7 +189,7 @@ select {
   <!-- <form style="display: none" action="/action_page.php">
     <input type="file" id="fileinput" name="filename" multiple>
   </form> -->
-  version: 2
+  version: 3
   <!-- <div id="dz" class="drop_zone" ondrop="dropHandler(event)" onclick="document.getElementById('fileinput').click();" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)"><span style="font-size:36px">⇲</span> Files</div> -->
   <!-- <div class="top_row" onclick="makevisible('settings')"><span style="font-size:36px">⚙</span> Settings</div> -->
   <!-- <div class="top_row" onclick="makevisible('shop')"><span style="font-size:28px; font-weight: 900;">$</span> Shop (<span id="pointsticker"></span>)</div> -->
@@ -505,14 +505,17 @@ select {
 
     function loadfile(fileurl) {
 
+      console.log("in load file");
+
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
+        console.log("ready state change");
         if (this.readyState == 4 && this.status == 200) {
           console.log("++ file loaded ++");
           universal_parse(fileurl, this.responseText);
         }
       };
-      xhttp.open("GET", fileurl + ".csv", true);
+      xhttp.open("GET", "data/" + fileurl + ".csv", true);
       xhttp.send();
 
     }
