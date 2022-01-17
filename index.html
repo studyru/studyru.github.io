@@ -186,11 +186,11 @@ select {
 </head>
 <body>
 
-  <form style="display: none" action="/action_page.php">
+  <!-- <form style="display: none" action="/action_page.php">
     <input type="file" id="fileinput" name="filename" multiple>
-  </form>
-
-  <div id="dz" class="drop_zone" ondrop="dropHandler(event)" onclick="document.getElementById('fileinput').click();" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)"><span style="font-size:36px">⇲</span> Files</div>
+  </form> -->
+  version: 2
+  <!-- <div id="dz" class="drop_zone" ondrop="dropHandler(event)" onclick="document.getElementById('fileinput').click();" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)"><span style="font-size:36px">⇲</span> Files</div> -->
   <!-- <div class="top_row" onclick="makevisible('settings')"><span style="font-size:36px">⚙</span> Settings</div> -->
   <!-- <div class="top_row" onclick="makevisible('shop')"><span style="font-size:28px; font-weight: 900;">$</span> Shop (<span id="pointsticker"></span>)</div> -->
   <!-- <div class="top_row" onclick="makevisible('game')"><span style="font-size:28px; font-weight: 900;">♠</span> Game</div> -->
@@ -210,14 +210,14 @@ select {
 
 <script>
 
-  document.getElementById("fileinput").addEventListener("change", function(e) {
-    console.log("value changed.......");
-    var files = e.target.files;
-    console.log(files);
-    for (var f=0; f<files.length; f++) {
-      handlefile(files[f]);
-    }
-  });
+  // document.getElementById("fileinput").addEventListener("change", function(e) {
+  //   console.log("value changed.......");
+  //   var files = e.target.files;
+  //   console.log(files);
+  //   for (var f=0; f<files.length; f++) {
+  //     handlefile(files[f]);
+  //   }
+  // });
 
   function makevisible(container) {
     console.log("make visible");
@@ -496,35 +496,60 @@ select {
 
   // ++++++++++++++++++++++++++ IMPORT FILES
 
-    function dropHandler(ev) {
-      ev.preventDefault();
-      for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-          if (ev.dataTransfer.items[i].kind === 'file') {
-            var file = ev.dataTransfer.files[i];
-            handlefile(file);
-          }
+    var fileurls = ["adjectives", "declensions", "conjugations", "expressions_words", "nouns", "translations", "verbs", "words_forms", "words_rels", "words"];
+    
+    for (var f=0; f<fileurls.length; f++) {
+      console.log("file loop: " + f.toString());
+      loadfile(fileurls[f]);
+    }
+
+    function loadfile(fileurl) {
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("++ file loaded ++");
+          universal_parse(fileurl, this.responseText);
         }
+      };
+      xhttp.open("GET", fileurl + ".csv", true);
+      xhttp.send();
+
     }
 
-    function handlefile(file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        universal_parse(file.name, event.target.result);
-      }
-      reader.readAsText(file);
-    };
+    // function dropHandler(ev) {
+    //   ev.preventDefault();
+    //   for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+    //       if (ev.dataTransfer.items[i].kind === 'file') {
+    //         var file = ev.dataTransfer.files[i];
+    //         handlefile(file);
+    //       }
+    //     }
+    // }
 
-    function dragOverHandler(ev) {
-      ev.preventDefault();
-    }
+    // function handlefile(file) {
+    //   const reader = new FileReader();
+    //   reader.onload = function (event) {
+    //     universal_parse(file.name, event.target.result);
+    //   }
+    //   reader.readAsText(file);
+    // };
 
-    function dragLeaveHandler(ev) {
-      ev.preventDefault();
-    }
+    // function dragOverHandler(ev) {
+    //   ev.preventDefault();
+    // }
+
+    // function dragLeaveHandler(ev) {
+    //   ev.preventDefault();
+    // }
 
     // ++++++++++++++++++++++++++ PARSE FILES
 
     function universal_parse(filename, str) {
+
+      console.log("++ universal parse ++");
+      console.log(filename);
+
       str = addStress(str);
       str = str.split("\n");
       for (var x=0; x<str.length; x++) {
