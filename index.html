@@ -12,7 +12,7 @@ body {
   overflow: hidden;
 }
 
-.drop_zone {
+/* .drop_zone {
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.25);
   display: inline-block;
   border-radius: 10px;
@@ -27,7 +27,7 @@ body {
 .drop_zone:hover {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.15);
-}
+} */
 
 .top_row {
   display: inline-block;
@@ -39,11 +39,11 @@ body {
   font-size:24px;
   line-height: 12px;
   font-family: 'Courier New', Courier, monospace;
-  transition: 0.25s;
+  /* transition: 0.25s; */
 }
 .top_row:hover {
   cursor: pointer;
-  background-color: rgb(200, 200, 200);
+  /* background-color: rgb(200, 200, 200); */
 }
 
 #prompt_button {
@@ -54,16 +54,17 @@ body {
   margin-right: 0px;
   margin-top: 5px;
   padding: 15px;
+  font-size: 48px;
   /* font-size: 18px; */
   font-family: 'Courier New', Courier, monospace;
-  transition: 0.25s;
+  /* transition: 0.25s; */
   color: white;
   background-color: crimson;
 }
-#prompt_button:hover {
+/* #prompt_button:hover {
   cursor: pointer;
   transform: scale(1.15);
-}
+} */
 h1 {
   display: inline-block;
   text-align: center;
@@ -584,9 +585,9 @@ select {
       }
       switch (filename.split(".")[0]) {
         case "verbs":
-          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('conjugation')\">Conjugation</div>";
-          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('aspect')\">Aspect</div>";
-          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('verbal')\">Verbal</div>";
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" ontouchdown=\"generate('conjugation')\" onclick=\"generate('conjugation')\">Conjugation</div>";
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" ontouchdown=\"generate('aspect')\" onclick=\"generate('aspect')\">Aspect</div>";
+          document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" ontouchdown=\"generate('verbal')\" onclick=\"generate('verbal')\">Verbal</div>";
           return;
         case "declensions":
           document.getElementById("actions").innerHTML += "<div id=\"prompt_button\" onclick=\"generate('declension')\">Declension</div>";
