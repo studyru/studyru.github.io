@@ -190,7 +190,7 @@ select {
   <!-- <form style="display: none" action="/action_page.php">
     <input type="file" id="fileinput" name="filename" multiple>
   </form> -->
-  version: 3
+  version: 4
   <!-- <div id="dz" class="drop_zone" ondrop="dropHandler(event)" onclick="document.getElementById('fileinput').click();" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)"><span style="font-size:36px">⇲</span> Files</div> -->
   <!-- <div class="top_row" onclick="makevisible('settings')"><span style="font-size:36px">⚙</span> Settings</div> -->
   <!-- <div class="top_row" onclick="makevisible('shop')"><span style="font-size:28px; font-weight: 900;">$</span> Shop (<span id="pointsticker"></span>)</div> -->
@@ -278,9 +278,9 @@ select {
   var prepositions = {
   "gen": ["без", "ввиду", "вдоль", "вместо", "вне", "внутри", "внутрь", "возле", "впереди", "вследствие", "вокруг", "для", "до", "из", "из-за", "из-под", "кроме", "между (gen. rare)", "мимо", "напротив", "насчет", "около", "от (ото)", "относительно", "помимо", "после", "посреди", "посредством", "подле", "позади", "против", "путём", "ради", "с (со)", "сверх", "свыше", "среди", "у"],
   "dat": ["благодаря", "вопреки", "к (ко)", "по"],
-  "acc": ["в (во) (movement)", "за (movement)", "на (movement)", "о", "по", "под (movement)", "про", "c", "сквозь", "через"],
+  "acc": ["в (во) (movement)", "за (movement)", "на (movement)", "о (acc)", "по (acc)", "под (movement)", "про", "c (acc)", "сквозь", "через"],
   "instr": ["за", "между", "над (надо)", "перед (передо)", "под (подо)", "с (со)"],
-  "prep": ["в (во)", "на", "о (об)", "по", "при"],
+  "prep": ["в (во)", "на", "о (об)", "по (prep)", "при"],
   }
   var preposition_translations = {
 "без": "'without'", "ввиду": "'in view of'", "вдоль": "'along'", "вместо": "'instead of'", "вне": "'outside'", "внутри": "'inside' to indicate the position", "внутрь": "'inside' to indicate movement", "возле": "'near'", "впереди": "'in front of'", "вследствие": "'because of'", "вокруг": "'round'", "для": "'for'", "до": "'up to, until, before'", "из": "'out of'", "из-за": "'out from behind, because of'", "из-под": "'out from under'", "кроме": "'besides, except'", "между": "'between' used with the genitive only in a few phrases: читать между строк, между двух огней", "мимо": "'past'", "напротив": "'opposite'", "насчет": "'about, as regards'", "около": "'at the side of, near, around'", "от (ото)": "'from, away from'", "относительно": "'concerning'", "помимо": "'besides, apart from'", "после": "'after'", "посреди": "'in the middle of'", "посредством": "'by means of'", "подле": "'alongside of'", "позади": "'behind'", "против": "'against'", "путём": "'by means of'", "ради": "'for the sake of'", "с (со)": "'from, off, since'", "сверх": "'on top of, over and above'", "свыше": "'over, more than'", "среди": "'among'", "у": "'near, at, at the house of (possession)'", "благодаря": "'thanks to'", "вопреки": "'despite'", "к (ко)": "'towards, up to'", "по": "'along, round, by means (communication), on (days)'", "в (во)": "'into, to, in' when movement is involved", "за": "'behind or beyond' when movement into a position is involved", "на": "'on to, on' when movement is involved", "о": "'against' in the sense of in contact with", "по": "'up to' a certain point in space or time", "под": "'under' when movement into a position is involved", "про": "'about, concerning'", "c": "'approximately, about' with nouns denoting measurement", "сквозь": "'through'", "через": "'across, through, over'", "за": "'behind, beyond'", "между": "'between'", "над (надо)": "'over, above'", "перед (передо)": "'in front of, before'", "под (подо)": "'under, below'", "с (со)": "'with'", "в (во)": "'in, at' to define location where sth is situated or hapenning, in expressions of time", "на": "'on, in, at' to define location", "о (об)": "'about, concerning'", "по": "'after, following'", "при": "'at the time of, in the presence of, while'"
@@ -406,7 +406,7 @@ select {
           decladj = datastore["declensions"][decladj];
         }
 
-        var selectedcase = randitem(["gen", "dat", "acc", "inst", "prep"]);
+        var selectedcase = randitem(cases);
         var prep = randitem(prepositions[selectedcase]);
 
         if (decladj == undefined || declnoun == undefined || Object.keys(decladj).length == 0 || Object.keys(declnoun).length == 0) {
