@@ -412,7 +412,12 @@ select {
         if (decladj == undefined || declnoun == undefined || Object.keys(decladj).length == 0 || Object.keys(declnoun).length == 0) {
           generate("declension");
         } else {
-          displayprompt(decladj["nom"] + " " + declnoun["nom"], prep, decladj[selectedcase] + " " + declnoun[selectedcase], 5000, type, [noun["id"], adj["id"]]);
+          if (randnum(1,100) % 2 == 0) {
+            displayprompt(decladj["nom"], prep, decladj[selectedcase], 3000, type, [noun["id"], adj["id"]]);
+          } else {
+            displayprompt(declnoun["nom"], prep, declnoun[selectedcase], 3000, type, [noun["id"], adj["id"]]);
+          }
+        
         }
 
         return;
